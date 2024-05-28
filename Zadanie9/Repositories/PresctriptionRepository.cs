@@ -23,20 +23,24 @@ public class PrescriptionRepository : IPrescriptionRepository
             throw new NotFoundException($"Prescription with id {id} not found");
         }
 
-        var doctor = await _context.Doctors.FindAsync(prescription.IdDoctor);
-        var doctorDto = new DoctorOutDto()
-        {
-            FirstName = doctor!.FirstName,
-            LastName = doctor.LastName,
-            Email = doctor.Email
-        };
-        var patient = await _context.Patients.FindAsync(prescription.IdPatient);
-        var patientDto = new PatientOutDto()
-        {
-            FirstName = patient!.FirstName,
-            LastName = patient.LastName,
-            Birthdate = patient.Birthdate
-        };
+        var doctor = await _context.Doctors
+            .Where(d => d.IdDoctor == prescription.IdDoctor)
+            .Select(d => new DoctorOutDto()
+            {
+                FirstName = d!.FirstName,
+                LastName = d.LastName,
+                Email = d.Email
+            })
+            .FirstOrDefaultAsync();
+        var patient = await _context.Patients
+            .Where(p => p.IdPatient == prescription.IdPatient)
+            .Select(p => new PatientOutDto()
+            {
+                FirstName = p!.FirstName,
+                LastName = p.LastName,
+                Birthdate = p.Birthdate
+            })
+            .FirstOrDefaultAsync();
         var medicaments = await _context.PrescriptionMedicaments
             .Where(pm => pm.IdPrescription == id)
             .Select(pm => pm.Medicament)
@@ -52,8 +56,8 @@ public class PrescriptionRepository : IPrescriptionRepository
             IdPrescription = prescription.IdPrescription,
             Date = prescription.Date,
             DueDate = prescription.DueDate,
-            Doctor = doctorDto,
-            Patient = patientDto,
+            Doctor = doctor!,
+            Patient = patient!,
             Medicaments = medicamentsDto
         };
         return result;
