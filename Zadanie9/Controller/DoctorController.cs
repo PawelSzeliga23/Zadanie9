@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Zadanie9.DTO_s;
@@ -8,6 +9,7 @@ using Zadanie9.Services;
 namespace Zadanie9.Controller;
 
 [ApiController]
+[Authorize]
 [Route("api/doctors")]
 public class DoctorController : ControllerBase
 {

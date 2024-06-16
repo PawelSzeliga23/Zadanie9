@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Zadanie9.Exceptions;
 using Zadanie9.Services;
 
 namespace Zadanie9.Controller;
 
 [ApiController]
+[Authorize]
 [Route("/api/prescription")]
 public class PrescriptionController : ControllerBase
 {
